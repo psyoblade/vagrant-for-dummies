@@ -68,7 +68,7 @@ vagrant up
 > [Vagrant를 이용한 Docker Swarm 테스팅](https://code-machina.github.io/2019/08/07/Docker-Swarm-with-Vagrant-Part-1.html) 에서 제공하는 파일을 일부 수정하여 사용했습니다 (그대로 사용시에 vagrant ssh 접근은 가능하지만, ansible 등을 통한 설치가 어려웠습니다)
 
 * 설정파일을 작성합니다
-  - docker-swarm 경로를 생성하고 Vagrantfile 파일을 아래와 같이 작성합니다
+  - ubuntu 경로를 생성하고 Vagrantfile 파일을 아래와 같이 작성합니다
 ```ruby
 BOX_IMAGE = "ubuntu/xenial64"  # 우분투 16.04
 WORKER_COUNT = 2  # 스웜의 워커로 사용할 노드의 수를 설정합니다
