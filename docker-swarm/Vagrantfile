@@ -1,0 +1,55 @@
+BOX_IMAGE = "ubuntu/xenial64"
+WORKER_COUNT = 2 # U can specify the number of workers.
+
+MANAGER_IP_ADDRESS = "192.168.100.10" # Also, can chagne the subnet network
+
+Vagrant.configure("2") do |config|
+ config.vm.box = BOX_IMAGE
+
+  config.vm.define "manager" do |subconfig|
+    subconfig.vm.box = BOX_IMAGE
+    subconfig.vm.hostname = "manager"
+    subconfig.vm.network :private_network, ip: MANAGER_IP_ADDRESS
+    subconfig.vm.network "forwarded_port", guest: 3000, host: 3500
+  end
+
+  (1..WORKER_COUNT).each do |worker_count|
+    config.vm.define "worker#{worker_count}" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.hostname = "worker#{worker_count}"
+      subconfig.vm.network :private_network, ip: "192.168.100.#{10 + worker_count}"
+      subconfig.vm.network "forwarded_port", guest: 3000, host: (3500 + worker_count)
+    end
+  end
+
+  config.vm.provider "virtualbox" do |vb|
+    # Customize the amount of memory on the VM:
+    vb.memory = "1024" # customize memory is required for pc
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+     echo "provisioning"
+     # to set-up proper image running docker swarm, you should change some dependencies.....
+     apt-get install \
+             apt-transport-https \
+       ca-certificates \
+       curl \
+       software-properties-common
+    
+    sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+    systemctl restart sshd.service
+
+    sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/g' /etc/ssh/sshd_config    
+    service ssh restart
+
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+    apt-key fingerprint 0EBFCD88
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+    apt-get update
+    apt-get install -y docker-ce
+    usermod -aG docker ubuntu
+
+  SHELL
+end
