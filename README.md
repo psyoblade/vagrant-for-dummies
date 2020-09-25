@@ -9,6 +9,7 @@
 * [Vagrant error ssh Permission Denied](https://www.youtube.com/watch?v=ELqNS1YBKtQ)
 * [Change ubuntu passwd](https://stackoverflow.com/questions/41337802/vagrants-ubuntu-16-04-vagrantfile-default-password)
 * [How to solve ssh-copy-id ERROR](https://www.poftut.com/solve-ssh-copy-id-error-failed-open-id-file-error/)
+* [Vagrant ssh settings](https://www.vagrantup.com/docs/vagrantfile/ssh_settings.html)
 
 
 ## 1. 기본 환경 설정
